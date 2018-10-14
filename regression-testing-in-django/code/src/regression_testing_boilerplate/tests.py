@@ -21,3 +21,4 @@ class PageOpenTestCase(TestCase):
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
         self.assertIn(b"Contact", r.content)
+        self.assertIn(b"2 + 2 = 4", r.content)

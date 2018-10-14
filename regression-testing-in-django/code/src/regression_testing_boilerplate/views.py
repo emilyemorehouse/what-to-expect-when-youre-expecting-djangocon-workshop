@@ -11,3 +11,8 @@ class AboutPage(generic.TemplateView):
 
 class ContactPage(generic.TemplateView):
     template_name = "contact.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ContactPage, self).get_context_data(*args, **kwargs)
+        context["two_plus_two"] = 2 + 2
+        return context
