@@ -50,6 +50,7 @@ Online: [Link](https://emilyemorehouse.github.io/what-to-expect-when-youre-expec
 
 ## 🧠 Resources
 
+- [Testing in Django](https://docs.djangoproject.com/en/2.1/topics/testing/)
 - [Edge - Django Boilerplate](https://django-edge.readthedocs.io)
 
 ## 🦄 Additional Resources

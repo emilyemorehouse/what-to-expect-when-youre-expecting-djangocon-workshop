@@ -34,7 +34,7 @@ development dependencies:
 
 ```sh
 pipenv shell  # Make sure to set your Python 3 path, if needed --python=/path/to/python3
-pipenv install
+pipenv install --dev
 ```
 
 #### Using Virtualenvwrapper
