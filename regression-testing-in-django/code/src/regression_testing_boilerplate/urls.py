@@ -13,6 +13,7 @@ admin.site.site_header = "Regression_Testing_Boilerplate Administration"
 urlpatterns = [
     path("", views.HomePage.as_view(), name="home"),
     path("about/", views.AboutPage.as_view(), name="about"),
+    path("contact/", views.ContactPage.as_view(), name="contact"),
     path("users/", include(profiles.urls)),
     path("admin/", admin.site.urls),
     path("", include(accounts.urls)),
