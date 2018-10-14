@@ -8,13 +8,16 @@ class PageOpenTestCase(TestCase):
         url = reverse("home")
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
+        self.assertIn(b"Home", r.content)
 
     def test_about_page_exists(self):
         url = reverse("about")
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
+        self.assertIn(b"About", r.content)
 
     def test_contact_page_exists(self):
         url = reverse("contact")
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
+        self.assertIn(b"Contact", r.content)
