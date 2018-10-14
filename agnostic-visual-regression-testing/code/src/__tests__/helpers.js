@@ -21,19 +21,32 @@ const screenSizes = {
 }
 
 const puppeteer = require('puppeteer')
+const devices = require('puppeteer/DeviceDescriptors')
 const fs = require('mz/fs')
 const compareImages = require('resemblejs/compareImages')
 
 async function takeScreenshot(dir, browser, route, screenSize, screenshotSize) {
-  const fileName = `${screenSize}/${screenshotSize[0]}-x-${
-    screenshotSize[1]
-  }${route || 'index'}`
-
   const page = await browser.newPage()
-  page.setViewport({
-    width: screenshotSize[0],
-    height: screenshotSize[1],
-  })
+  let fileName = null
+
+  if (screenSize === 'device') {
+    fileName = `${screenSize}/${screenshotSize}${route || 'index'}`
+
+    page.emulate(devices[screenshotSize])
+  } else {
+    fileName = `${screenSize}/${screenshotSize[0]}-x-${
+      screenshotSize[1]
+    }${route || 'index'}`
+
+    page.setViewport({
+      width: screenshotSize[0],
+      height: screenshotSize[1],
+    })
+  }
+
+  // Sanitize our file name
+  fileName = fileName.replace(' ', '')
+
   await page.goto(`http://localhost:8888/${route}`)
   await page.screenshot({
     path: `${dir}/${fileName}.png`,
@@ -66,6 +79,11 @@ async function generateGoldenScreenshots() {
       )
     })
   })
+
+  // Example device for emulation
+  if (!fs.existsSync(`${goldenDir}/device`)) fs.mkdirSync(`${goldenDir}/device`)
+  screenShots.push(takeScreenshot(goldenDir, browser, '', 'device', 'iPhone 6'))
+
   return Promise.all(screenShots).then(() => {
     // Clean up and close out
     browser.close()
