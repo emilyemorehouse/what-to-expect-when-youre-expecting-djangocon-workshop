@@ -29,10 +29,6 @@ describe('dinosaurs are partying', () => {
       if (!fs.existsSync(`${testDir}/${screenshotType}`))
         fs.mkdirSync(`${testDir}/${screenshotType}`)
     })
-
-    // Example for device types - manually create directory
-    if (!fs.existsSync(`${diffDir}/device`)) fs.mkdirSync(`${diffDir}/device`)
-    if (!fs.existsSync(`${testDir}/device`)) fs.mkdirSync(`${testDir}/device`)
   })
 
   beforeEach(async () => {
@@ -45,19 +41,22 @@ describe('dinosaurs are partying', () => {
   Object.keys(screenSizes).forEach(screenshotType => {
     Object.keys(screenSizes[screenshotType]).forEach(screenSize => {
       const screenshotSize = screenSizes[screenshotType][screenSize]
+      let testName = null
 
-      describe(`index - ${screenshotType} - ${screenshotSize[0]} x ${
-        screenshotSize[1]
-      }`, async () => {
+      // Handle device types, which only specify the device name
+      if (screenshotType === 'device') {
+        testName = `index - ${screenshotSize}`
+      } else {
+        // Handle generic viewports, which specify a height and width
+        testName = `index - ${screenshotType} - ${screenshotSize[0]} x ${
+          screenshotSize[1]
+        }`
+      }
+
+      describe(testName, async () => {
         it('/', async () =>
           takeAndCompareScreenshot(browser, '', screenshotType, screenshotSize))
       })
     })
-  })
-
-  // Example test for a specific device type
-  describe(`index - iPhone 6}`, async () => {
-    it('/', async () =>
-      takeAndCompareScreenshot(browser, '', 'device', 'iPhone 6'))
   })
 })

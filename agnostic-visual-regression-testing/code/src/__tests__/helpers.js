@@ -18,6 +18,7 @@ const diffOptions = {
 const screenSizes = {
   desktop: [[1024, 768], [1366, 768]],
   mobile: [[320, 568], [375, 667], [1024, 1366]],
+  device: ['iPhone 6', 'iPad', 'Galaxy S III'],
 }
 
 const puppeteer = require('puppeteer')
@@ -79,10 +80,6 @@ async function generateGoldenScreenshots() {
       )
     })
   })
-
-  // Example device for emulation
-  if (!fs.existsSync(`${goldenDir}/device`)) fs.mkdirSync(`${goldenDir}/device`)
-  screenShots.push(takeScreenshot(goldenDir, browser, '', 'device', 'iPhone 6'))
 
   return Promise.all(screenShots).then(() => {
     // Clean up and close out
