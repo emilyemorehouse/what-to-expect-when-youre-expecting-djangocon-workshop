@@ -18,7 +18,8 @@ const diffOptions = {
 const screenSizes = {
   desktop: [[1024, 768], [1366, 768]],
   mobile: [[320, 568], [375, 667], [1024, 1366]],
-  device: ['iPhone 6', 'iPad', 'Galaxy S III'],
+  mobile_device: ['iPhone 6', 'Galaxy S III'],
+  tablet_device: ['iPad'],
 }
 const baseUrl = 'http://127.0.0.1:8000'
 
@@ -27,20 +28,27 @@ const devices = require('puppeteer/DeviceDescriptors')
 const fs = require('mz/fs')
 const compareImages = require('resemblejs/compareImages')
 
-async function takeScreenshot(dir, browser, route, screenSize, screenshotSize) {
+async function takeScreenshot(
+  dir,
+  browser,
+  route,
+  screenSize,
+  screenshotSize,
+  clickTarget,
+) {
   const page = await browser.newPage()
   let fileName = null
 
-  if (screenSize === 'device') {
+  if (screenSize === 'mobile_device' || screenSize === 'tablet_device') {
     fileName = `${screenSize}/${screenshotSize}${route || 'index'}`
 
-    page.emulate(devices[screenshotSize])
+    await page.emulate(devices[screenshotSize])
   } else {
     fileName = `${screenSize}/${screenshotSize[0]}-x-${
       screenshotSize[1]
     }${route || 'index'}`
 
-    page.setViewport({
+    await page.setViewport({
       width: screenshotSize[0],
       height: screenshotSize[1],
     })
@@ -50,6 +58,21 @@ async function takeScreenshot(dir, browser, route, screenSize, screenshotSize) {
   fileName = fileName.replace(' ', '')
 
   await page.goto(`${baseUrl}/${route}`)
+
+  // Handle clicks, if specified
+  if (clickTarget) {
+    // Update our filename to track navigation
+    fileName += `-to-${clickTarget}`
+
+    // Automatically expand the menu on smaller devices
+    if (screenSize === 'mobile_device' || screenshotSize[0] < 768) {
+      await page.click('[data-toggle="collapse"]')
+    }
+
+    // Navigate by clicking on our target
+    await page.click(clickTarget)
+  }
+
   await page.screenshot({
     path: `${dir}/${fileName}.png`,
     fullPage: true,
@@ -79,6 +102,16 @@ async function generateGoldenScreenshots() {
       screenShots.push(
         takeScreenshot(goldenDir, browser, '', screenshotType, screenshotSize),
       )
+      screenShots.push(
+        takeScreenshot(
+          goldenDir,
+          browser,
+          '',
+          screenshotType,
+          screenshotSize,
+          '#about',
+        ),
+      )
     })
   })
 
@@ -103,6 +136,7 @@ async function takeAndCompareScreenshot(
   route,
   screenSize,
   screenshotSize,
+  clickTarget,
 ) {
   const fileName = await takeScreenshot(
     testDir,
@@ -110,6 +144,7 @@ async function takeAndCompareScreenshot(
     route,
     screenSize,
     screenshotSize,
+    clickTarget,
   )
   return processScreenshot(fileName)
 }

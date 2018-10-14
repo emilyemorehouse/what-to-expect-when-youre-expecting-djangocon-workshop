@@ -44,18 +44,32 @@ describe('dinosaurs are partying', () => {
       let testName = null
 
       // Handle device types, which only specify the device name
-      if (screenshotType === 'device') {
-        testName = `index - ${screenshotSize}`
+      if (
+        screenshotType === 'mobile_device' ||
+        screenshotType === 'tablet_device'
+      ) {
+        testName = `${screenshotSize}`
       } else {
         // Handle generic viewports, which specify a height and width
-        testName = `index - ${screenshotType} - ${screenshotSize[0]} x ${
+        testName = `${screenshotType} - ${screenshotSize[0]} x ${
           screenshotSize[1]
         }`
       }
 
-      describe(testName, async () => {
+      describe(`index - ${testName}`, async () => {
         it('/', async () =>
           takeAndCompareScreenshot(browser, '', screenshotType, screenshotSize))
+      })
+
+      describe(`access about from index - ${testName}`, async () => {
+        it('/about', async () =>
+          takeAndCompareScreenshot(
+            browser,
+            '',
+            screenshotType,
+            screenshotSize,
+            '#about',
+          ))
       })
     })
   })

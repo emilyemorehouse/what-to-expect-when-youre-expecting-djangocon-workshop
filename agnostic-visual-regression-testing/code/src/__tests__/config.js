@@ -21,6 +21,7 @@ module.exports = {
   screenSizes: {
     desktop: [[1024, 768], [1366, 768]],
     mobile: [[320, 568], [375, 667], [1024, 1366]],
-    device: ['iPhone 6', 'iPad', 'Galaxy S III'],
+    mobile_device: ['iPhone 6', 'Galaxy S III'],
+    tablet_device: ['iPad'],
   },
 }
