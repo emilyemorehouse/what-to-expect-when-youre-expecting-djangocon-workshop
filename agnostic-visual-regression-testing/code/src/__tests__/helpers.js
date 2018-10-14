@@ -20,6 +20,7 @@ const screenSizes = {
   mobile: [[320, 568], [375, 667], [1024, 1366]],
   device: ['iPhone 6', 'iPad', 'Galaxy S III'],
 }
+const baseUrl = 'http://127.0.0.1:8000'
 
 const puppeteer = require('puppeteer')
 const devices = require('puppeteer/DeviceDescriptors')
@@ -48,7 +49,7 @@ async function takeScreenshot(dir, browser, route, screenSize, screenshotSize) {
   // Sanitize our file name
   fileName = fileName.replace(' ', '')
 
-  await page.goto(`http://localhost:8888/${route}`)
+  await page.goto(`${baseUrl}/${route}`)
   await page.screenshot({
     path: `${dir}/${fileName}.png`,
     fullPage: true,

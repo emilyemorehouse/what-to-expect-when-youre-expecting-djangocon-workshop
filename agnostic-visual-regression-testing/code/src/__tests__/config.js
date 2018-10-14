@@ -1,4 +1,5 @@
 module.exports = {
+  baseUrl: 'http://127.0.0.1:8000',
   // Directories for storing all of our image types
   diffDir: './src/__tests__/__diffs__',
   goldenDir: './src/__tests__/__golden__',
